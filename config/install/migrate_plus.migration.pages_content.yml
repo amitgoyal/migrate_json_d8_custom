@@ -11,8 +11,8 @@ source:
   # In pages_content.json, <pages> is the outer element, and each item
   # we want to import is a <page> element.
   # The item_selector value is the xpath to use to query the elements.
-#  item_selector: /pages/page
-  item_selector: 2
+  # item_selector: 2
+  item_selector: /pages/page
   # Under 'fields', we list the data items to be imported. The first level keys
   # are the source field names we want to populate (the names to be used as
   # sources in the process configuration below). For each field we're importing,
