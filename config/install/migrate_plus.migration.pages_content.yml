@@ -1,0 +1,105 @@
+# This migration shows importing from a single JSON file.
+id: pages_content
+label: Pages content
+migration_group: default
+source:
+  plugin: url
+  # This is one or more fully-qualified URLs or file paths.
+  urls: "http://d8.local:8083/pages_content.json"
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  # In pages_content.json, <pages> is the outer element, and each item
+  # we want to import is a <page> element.
+  # The item_selector value is the xpath to use to query the elements.
+#  item_selector: /pages/page
+  item_selector: 2
+  # Under 'fields', we list the data items to be imported. The first level keys
+  # are the source field names we want to populate (the names to be used as
+  # sources in the process configuration below). For each field we're importing,
+  # we provide a label (optional - this is for display in migration tools) and
+  # an xpath for retrieving that value. It's important to note that this xpath
+  # is relative to the elements retrieved by item_xpath.
+  fields:
+    -
+      name: page_title
+      label: 'Page Title'
+      selector: title
+    -
+      name: id
+      label: 'Unique Id'
+      selector: id
+    -
+      name: page_body
+      label: 'Page Body'
+      selector: body
+    -
+      name: city
+      label: 'City'
+      selector: city
+    -
+      name: state
+      label: 'State'
+      selector: state
+    -
+      name: site_url
+      label: 'Site URL'
+      selector: site_url
+    -
+      name: site_name
+      label: 'Site Name'
+      selector: site_name
+    -
+      name: keywords
+      label: 'Keywords'
+      selector: keywords
+    -
+      name: date_created
+      label: 'Date Created'
+      selector: date_created
+  # Under 'ids', we identify source fields populated above which will uniquely
+  # identify each imported item.
+  ids:
+    id:
+      type: string
+process:
+  title: page_title
+  'body/value': page_body
+  'body/format':
+    plugin: default_value
+    default_value: basic_html
+  field_place:
+    plugin: concat
+    delimiter: -
+    source:
+      - city
+      - state
+  'field_url/uri': site_url
+  'field_url/title': site_name
+  field_tags:
+    -
+      plugin: explode
+      source: keywords
+      delimiter: ,
+    -
+      plugin: entity_generate
+      value_key: name
+      bundle_key: vid
+      bundle: tags
+      entity_type: taxonomy_term
+      ignore_case: true
+  created:
+    plugin: callback
+    callable: strtotime
+    source: date_created
+  type:
+    plugin: content_type_plugin
+    source: site_url
+  uid:
+    plugin: default_value
+    default_value: 1
+  status:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: entity:node
+migration_dependencies: {}

@@ -1,0 +1,7 @@
+name: Migrate JSON to D8 Custom
+type: module
+core: 8.x
+description: 'JSON to Drupal 8 Custom Migration Module.'
+dependencies:
+  - migrate_tools
+  - migrate_plus
