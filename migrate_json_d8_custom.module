@@ -6,6 +6,6 @@
  * Cleans up config entities installed by this module.
  */
 function migrate_json_d8_custom_uninstall() {
-  db_query("DELETE FROM {config} WHERE name LIKE '%migrate_plus.migration.pages_content%'");
+  \Drupal::database()->query("DELETE FROM {config} WHERE name LIKE '%migrate_plus.migration.pages_content%'");
   drupal_flush_all_caches();
 }
